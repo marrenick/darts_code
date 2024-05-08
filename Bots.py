@@ -11,7 +11,8 @@ class Bots:
         self.player = player
         self.dartbord = dartboardField()
         self.difficulty = difficulty
-        datadude = dataRetriever('C:/Users/WarreGeversNordend/PycharmProjects/DartsAnalysis/connection.ini')
+        #Aan te passen zodat connection.ini meteen goed naar u eigen omgeving gaat en/of niet in github
+        datadude = dataRetriever('C:/Users/MarnickClé/PycharmProjects/DartsAnalysis/connection.ini')
 
         data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
         self.statisticsman = statisticsMan(data)
