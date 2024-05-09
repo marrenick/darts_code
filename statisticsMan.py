@@ -2,9 +2,7 @@ import pandas as pd
 import numpy as np
 import math
 
-from shapely import wkb
-from shapely.wkb import loads
-from shapely.geometry import Point, mapping
+
 import binascii
 
 from dataRetriever import dataRetriever
@@ -22,8 +20,6 @@ def getMultiplier(section_hit_dart):
     else:
         return 0
 
-def to_wkb(geom):
-    return wkb.dumps(mapping(geom))
 
 def getRadius(section, number):
     if section == 'MISS':
