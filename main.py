@@ -12,8 +12,8 @@ if __name__ == '__main__':
     player = 'Warre'
     number = 20
     section = 'TRIPLE'
-    #aan te passen zodat connection file meteen goed staat
-    datadude = dataRetriever('C:/Users/MarnickClé/PycharmProjects/DartsAnalysis/connection.ini')
+    # ./om te refereren naar zelfde folder als .py files
+    datadude = dataRetriever('./connection.ini')
 
     data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
 

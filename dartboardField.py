@@ -3,12 +3,13 @@ import math
 
 from dataRetriever import dataRetriever
 
-#ini file opnieuw
-datadude = dataRetriever('C:/Users/MarnickClé/PycharmProjects/DartsAnalysis/connection.ini')
+#./om te refereren naar zelfde folder als .py files
+datadude = dataRetriever('./connection.ini')
 centerpoints = datadude.database_read_data(schema='darts', table_name='dartboard_centerpoints')
 
 class dartboardField:
     def __init__(self):
+        #komt 2maal voor, zie lijn 51-53
         self.sector_boundaries = [9, 27, 45, 63, 81, 99, 117, 135, 153, 171, 189, 207, 225, 243, 261, 279, 297, 315, 333, 351]
         self.sector_scores = [6, 13, 4, 18, 1, 20, 5, 12, 9, 14, 11, 8, 16, 7, 19, 3, 17, 2, 15, 10]
 
@@ -18,8 +19,10 @@ class dartboardField:
         distance = math.sqrt(x ** 2 + y ** 2)
 
         # Define the radii of different scoring regions
-        bullseye_radius = 6.35  # Bullseye radius (inner bullseye)
-        outer_bullseye_radius = 15.9  # Outer bullseye radius
+        #bullseye on our board is 7, not 6.35!
+        bullseye_radius = 7  # Bullseye radius (inner bullseye)
+        #bullseye single on our board is 16! not 15.9
+        outer_bullseye_radius = 16  # Outer bullseye radius
         double_ring_radius = 170  # Radius of the outer edge of the triple ring
 
         # Check if the dart lands outside the dartboard
@@ -46,6 +49,7 @@ class dartboardField:
             angle_degrees += 360  # Ensure positive angle
 
         # Define the sector boundaries and corresponding scores
+        # komt 2maal voor, zie lijn 12
         sector_boundaries = [9, 27, 45, 63, 81, 99, 117, 135, 153, 171, 189, 207, 225, 243, 261, 279, 297, 315, 333, 351]
         sector_scores = [6, 13, 4, 18, 1, 20, 5, 12, 9, 14, 11, 8, 16, 7, 19, 3, 17, 2, 15,
                          10]  # Sector scores from 1 to 20
@@ -65,10 +69,12 @@ class dartboardField:
             score = sector_scores[sector]
 
             # Check if the dart lands in the double or triple ring
-            if 162.6 <= distance <= 170:  # Double ring
+            # Double ring was larger! B4 number was 162.4!!
+            if 161 <= distance <= 170:  # Double ring
                 section = 'DOUBLE'
                 return score * 2
-            elif 99 <= distance <= 107:  # Triple ring
+            # triple ring was larger on our board we use!? B4 was 99
+            elif 97 <= distance <= 107:  # Triple ring
                 section = 'TRIPLE'
                 return score * 3
             else:
