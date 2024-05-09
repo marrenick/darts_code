@@ -3,7 +3,8 @@ import math
 
 from dataRetriever import dataRetriever
 
-datadude = dataRetriever('C:/Users/WarreGeversNordend/PycharmProjects/DartsAnalysis/connection.ini')
+#ini file opnieuw
+datadude = dataRetriever('C:/Users/MarnickClé/PycharmProjects/DartsAnalysis/connection.ini')
 centerpoints = datadude.database_read_data(schema='darts', table_name='dartboard_centerpoints')
 
 class dartboardField:

@@ -5,43 +5,35 @@ from dartboardField import dartboardField
 from dataRetriever import dataRetriever
 from statisticsMan import statisticsMan
 
-datadude = dataRetriever('C:/Users/WarreGeversNordend/PycharmProjects/DartsAnalysis/connection.ini')
 
-data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
-statisticsman = statisticsMan(data)
 class Bots:
     def __init__(self, player, difficulty):
         self.player = player
         self.dartbord = dartboardField()
         self.difficulty = difficulty
+        datadude = dataRetriever('C:/Users/WarreGeversNordend/PycharmProjects/DartsAnalysis/connection.ini')
 
-
+        data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
+        self.statisticsman = statisticsMan(data)
 
     def throw(self, player, aimed_at_number, aimed_at_section):
         x_centre, y_centre, section = self.dartbord.get_coordinates_from_throw(aimed_at_number, aimed_at_section)
-
-        cov = statisticsman.calculateCovarianceMatrix(player, aimed_at_number, aimed_at_section).mul(
+        print(x_centre,y_centre)
+        cov = self.statisticsman.calculateCovarianceMatrix(player, aimed_at_number, aimed_at_section).mul(
             self.difficulty)
-
-        if cov.empty:
-            cov = statisticsman.calculateCovarianceMatrix(player, 20, 'TRIPLE').mul(
-                self.difficulty)
-        x, y = np.random.multivariate_normal([float(x_centre), float(y_centre)], cov, 1).T
+        print(cov)
+        x, y = np.random.multivariate_normal([x_centre, y_centre], cov, 1).T
         throws = [self.dartbord.calculate_dart_score(x_throw, y_throw) for x_throw in x for y_throw in y]
         return throws[0], section
 
 
 if __name__ == '__main__':
     player = input('Choose opponent:')
-    difficulty = 0.45
-    cova = statisticsman.calculateCovarianceMatrix(player, 20, 'TRIPLE').mul(difficulty)
-    std_x,std_y = statisticsman.std_from_cov(cova)
-    print(std_x,std_y)
+    difficulty = 0.05
     bot = Bots(player, difficulty)
     while True:
-        aimed_at_number = input('Aim at number: ')
-        aimed_at_section = input('Ain at section: ')
-        throw, section = bot.throw(player, aimed_at_number, aimed_at_section)
+        input('Press enter to throw again.')
+        throw, section = bot.throw(player, 16, 'DOUBLE')
         print(str(throw))
 
 
