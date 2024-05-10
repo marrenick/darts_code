@@ -129,7 +129,6 @@ class dartboardField:
             # Check if the dart lands in the double or triple ring
             if 161 <= distance <= 170:  # Double ring
                 return 'D'+str(score)
-
             elif 97 <= distance <= 107:  # Triple ring
                 return 'T'+str(score)
             else:
