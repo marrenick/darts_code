@@ -16,6 +16,8 @@ class Bots:
 
         data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
         self.statisticsman = statisticsMan(data)
+        std = self.statisticsman.calculateStandardDeviation(self.player,20,"TRIPLE")*difficulty
+        print('Standard deviation of the bot : {0}.'.format(std))
 
     def throw(self, player, aimed_at_number, aimed_at_section):
         x_centre, y_centre = self.dartboard.get_coordinates_from_throw(aimed_at_number, aimed_at_section)

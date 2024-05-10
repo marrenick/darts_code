@@ -78,7 +78,7 @@ class FiveOOneGame(tk.Tk):
         # Button to start over
         ttk.Button(self, text="Start Over", command=self.start_over).grid(row=10, columnspan=3, padx=5, pady=5)
 
-        self.bot = Bots(self.player_name, self.difficulty_level.get())
+        self.bot = Bots(self.player_name.get(), self.difficulty_level.get())
 
 
     def update_aimed_number(self, value):
@@ -125,14 +125,12 @@ class FiveOOneGame(tk.Tk):
             self.difficulty_6_button.state(['pressed'])
 
 
-        self.bot = Bots(self.player_name, float(self.difficulty_level.get()))
+        self.bot = Bots(self.player_name.get(), float(self.difficulty_level.get()))
         print("New difficulty " + str(self.difficulty_level.get()))
 
     def start_over(self):
         # Reset all values
         self.score_left = 501
-        self.aimed_at_number.set(1)
-        self.aimed_at_section.set("")
         self.average_throw.set("0")
         self.num_throws.set("0")
         self.score_label.config(text="Score Left: 501")
@@ -146,9 +144,6 @@ class FiveOOneGame(tk.Tk):
 
     def throw_dart(self):
         # Simulate throwing darts
-        print(self.aimed_at_number.get())
-        print(self.aimed_at_section.get())
-        print(self.player_name.get())
         score, section = self.bot.throw(aimed_at_number=self.aimed_at_number.get(),
                                     aimed_at_section=self.aimed_at_section.get(),
                                     player=self.player_name.get())
