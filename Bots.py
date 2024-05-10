@@ -21,7 +21,9 @@ class Bots:
         x_centre, y_centre = self.dartbord.get_coordinates_from_throw(aimed_at_number, aimed_at_section)
         cov = self.statisticsman.calculateCovarianceMatrix(player, aimed_at_number, aimed_at_section).mul(
             self.difficulty)
-        print(cov)
+        if cov.empty:
+            cov = self.statisticsman.calculateCovarianceMatrix(player, 20, 'TRIPLE').mul(
+                self.difficulty)
         x, y = np.random.multivariate_normal([x_centre, y_centre], cov, 1).T
         throws = [self.dartboard.calculate_dart_score(x_throw, y_throw) for x_throw in x for y_throw in y]
         sections = [self.dartbord.calculate_dart_section(x_throw, y_throw) for x_throw in x for y_throw in y]
@@ -30,14 +32,16 @@ class Bots:
 
 if __name__ == '__main__':
     player = input('Choose opponent:')
-    difficulty = 0.05
-
+    difficulty = 0.45
+    cova = statisticsman.calculateCovarianceMatrix(player, 20, 'TRIPLE').mul(difficulty)
+    std_x,std_y = statisticsman.std_from_cov(cova)
+    print(std_x,std_y)
     bot = Bots(player, difficulty)
     while True:
-        input('Press enter to throw again.')
-        throw, section = bot.throw(player, 16, 'DOUBLE')
+        aimed_at_number = input('Aim at number: ')
+        aimed_at_section = input('Ain at section: ')
+        throw, section = bot.throw(player, aimed_at_number, aimed_at_section)
         print(str(throw))
-        print(section)
 
 
     def temp(self):
