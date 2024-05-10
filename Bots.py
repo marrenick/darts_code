@@ -21,7 +21,9 @@ class Bots:
 
         cov = self.statisticsman.calculateCovarianceMatrix(player, aimed_at_number, aimed_at_section).mul(
             self.difficulty)
-        print(cov)
+        if cov.empty:
+            cov = self.statisticsman.calculateCovarianceMatrix(player, 20, "TRIPLE").mul(
+                self.difficulty)
         x, y = np.random.multivariate_normal([x_centre, y_centre], cov, 1).T
         throws = [self.dartbord.calculate_dart_score(x_throw, y_throw) for x_throw in x for y_throw in y]
         sections = [self.dartbord.calculate_dart_section(x_throw, y_throw) for x_throw in x for y_throw in y]

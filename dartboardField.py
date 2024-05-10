@@ -3,7 +3,7 @@ import math
 from dataRetriever import dataRetriever
 
 # ini file opnieuw
-datadude = dataRetriever('C:/Users/MarnickClé/PycharmProjects/DartsAnalysis/connection.ini')
+datadude = dataRetriever('C:/Users/WarreGeversNordend/PycharmProjects/DartsAnalysis/connection.ini')
 centerpoints = datadude.database_read_data(schema='darts', table_name='dartboard_centerpoints')
 
 
@@ -136,4 +136,4 @@ class dartboardField:
     def get_coordinates_from_throw(self, number, section):
         cp = centerpoints.loc[centerpoints['number'] == str(number)]
         cp = cp.loc[cp['section'] == str(section)]
-        return cp['_x'].values[0], cp['_y'].values[0]
+        return float(cp['_x'].values[0]), float(cp['_y'].values[0])
