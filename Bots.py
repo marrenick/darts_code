@@ -33,8 +33,8 @@ class Bots:
 if __name__ == '__main__':
     player = input('Choose opponent:')
     difficulty = 0.45
-    cova = statisticsman.calculateCovarianceMatrix(player, 20, 'TRIPLE').mul(difficulty)
-    std_x,std_y = statisticsman.std_from_cov(cova)
+    cova = statisticsMan.calculateCovarianceMatrix(player, 20, 'TRIPLE').mul(difficulty)
+    std_x,std_y = statisticsMan.std_from_cov(cova)
     print(std_x,std_y)
     bot = Bots(player, difficulty)
     while True:
