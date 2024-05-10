@@ -39,7 +39,7 @@ if __name__ == '__main__':
     bot = Bots(player, difficulty)
     while True:
         aimed_at_number = input('Aim at number: ')
-        aimed_at_section = input('Ain at section: ')
+        aimed_at_section = input('Aim at section: ')
         throw, section = bot.throw(player, aimed_at_number, aimed_at_section)
         print(str(throw))
 
