@@ -13,12 +13,12 @@ class FiveOOneGame(tk.Tk):
         super().__init__()
 
         self.title("501 Game")
-        self.geometry("1200x1000")
+        self.geometry("1400x1400")
 
         # Variables to store selected player, aimed at number, section, average throw, number of throws, score left, and difficulty level
         self.selected_player = tk.StringVar()
 
-        self.aimed_at_number = tk.IntVar(value=1)
+        self.aimed_at_number = tk.IntVar(value=20)
         self.aimed_at_section = tk.StringVar(value="TRIPLE")
         self.score_left = 501
 
@@ -27,8 +27,8 @@ class FiveOOneGame(tk.Tk):
         self.difficulty_level = tk.StringVar(value="1")
         self.players = {
             "Marnick": "graphics/profilepics/Marnick{0}.png".format(self.difficulty_level.get()),
-            "Warre": "graphics/profilepics/{0}.png".format(self.difficulty_level.get()),
-            "Jelle": "graphics/profilepics/{0}.png".format(self.difficulty_level.get())
+            "Warre": "graphics/profilepics/Warre{0}.png".format(self.difficulty_level.get()),
+            "Jelle": "graphics/profilepics/Jelle{0}.png".format(self.difficulty_level.get())
         }
 
         # Create widgets
@@ -94,6 +94,14 @@ class FiveOOneGame(tk.Tk):
 
         # Button to start over
         ttk.Button(self, text="Start Over", command=self.start_over).grid(row=10, columnspan=3, padx=5, pady=5)
+
+        self.canvas = tk.Canvas(self, width=894, height=886)
+        self.canvas.grid(row=11, columnspan=5, padx=5, pady=5)
+
+        # Load dartsboard image
+        self.dartsboard_image = Image.open("graphics/output_image.png")
+        self.dartsboard_photo = ImageTk.PhotoImage(self.dartsboard_image)
+        self.canvas.create_image(894, 886, anchor=tk.SE, image=self.dartsboard_photo)
 
         self.bot = Bots(self.selected_player.get(), self.difficulty_level.get())
         self.update_player_image()
@@ -164,16 +172,16 @@ class FiveOOneGame(tk.Tk):
         self.num_throws.set("0")
         self.score_label.config(text="Score Left: 501")
         self.throw_result_label.config(text="")
+        self.canvas.delete("all")
+        self.canvas.create_image(447, 443, anchor=tk.CENTER, image=self.dartsboard_photo)
 
     def update_player_image(self, event=None):
         # Update player image based on selected player
         player_name = self.selected_player.get()
-        print(player_name)
-        print(self.players)
+
         if player_name in self.players:
             image_path = self.players[player_name]
             try:
-                print("lol")
                 img = Image.open(image_path)
                 img = img.resize((400, 400))
                 player_image = ImageTk.PhotoImage(img)
@@ -184,9 +192,15 @@ class FiveOOneGame(tk.Tk):
 
     def throw_dart(self):
         # Simulate throwing darts
-        score, section = self.bot.throw(aimed_at_number=self.aimed_at_number.get(),
+        score, section, coords = self.bot.throw(aimed_at_number=self.aimed_at_number.get(),
                                         aimed_at_section=self.aimed_at_section.get(),
                                         player=self.selected_player.get())
+        x = (coords[0][0])*368/170+447
+
+        y = 443-coords[1][0]*364/170
+        print(x,y)
+        self.canvas.create_line(x - 5, y - 5, x + 5, y + 5, fill="red", width=2)
+        self.canvas.create_line(x - 5, y + 5, x + 5, y - 5, fill="red", width=2)
         # TODO AND DOUBLE
         if self.score_left == score:
             result_text = f"{self.selected_player.get()} threw {section} for {score} points and won the game."
