@@ -66,29 +66,6 @@ class statisticsMan:
             average = data_filtered[['average_throw']].mean(axis=0)
             return round(average.values[0],2),data_filtered.shape[0]
 
-    def calculateDistanceBetweenThrows(self, aimed_at_number, aimed_at_section, thrown_number, thrown_section):
-        n_0 = self.board_config.index(aimed_at_number)
-        n = self.board_config.index(thrown_number)
-
-        theta_0 = 18 * n_0
-        theta = 18 * n
-        R_0 = getRadius(aimed_at_section, aimed_at_number)
-        R = getRadius(thrown_section, thrown_number)
-
-        dist = math.sqrt(R_0 ** 2 + R ** 2 - 2 * R * R_0 * math.cos(math.pi * (theta - theta_0) / 180))
-
-        return dist
-
-    def calculateXYCoordinates(self, thrown_number, thrown_section):
-        n = self.board_config.index(thrown_number)
-        theta = 18 * n
-        R = getRadius(thrown_section, thrown_number)
-
-        x = R * math.cos(theta * math.pi / 180)
-        y = R * math.sin(theta * math.pi / 180)
-
-        return [x,y]
-
     def calculateStandardDeviation(self, player, number, section):
         std = 0
         data_filtered = self.data.loc[self.data['player'] == player]
