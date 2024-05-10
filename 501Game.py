@@ -10,7 +10,7 @@ class FiveOOneGame(tk.Tk):
         super().__init__()
 
         self.title("501 Game")
-        self.geometry("600x400")
+        self.geometry("700x400")
 
         # Variables to store player name, aimed at number, and section
         self.player_name = tk.StringVar()
@@ -57,6 +57,8 @@ class FiveOOneGame(tk.Tk):
         self.difficulty_4_button.grid(row=0, column=3, sticky="ew", padx=2)
         self.difficulty_5_button = ttk.Button(difficulty_frame, text="5", command=lambda: self.set_difficulty("0.10"))
         self.difficulty_5_button.grid(row=0, column=4, sticky="ew", padx=2)
+        self.difficulty_6_button = ttk.Button(difficulty_frame, text="10", command=lambda: self.set_difficulty("0.05"))
+        self.difficulty_6_button.grid(row=0, column=5, sticky="ew", padx=2)
 
         ttk.Button(self, text="Throw", command=self.throw_dart).grid(row=5, columnspan=3, padx=5, pady=5)
 
@@ -107,7 +109,7 @@ class FiveOOneGame(tk.Tk):
 
         # Highlight the selected button
         for button in [self.difficulty_1_button, self.difficulty_2_button, self.difficulty_3_button,
-                       self.difficulty_4_button, self.difficulty_5_button]:
+                       self.difficulty_4_button, self.difficulty_5_button,self.difficulty_6_button]:
             button.state(['!pressed'])
         if difficulty == "1":
             self.difficulty_1_button.state(['pressed'])
@@ -119,6 +121,8 @@ class FiveOOneGame(tk.Tk):
             self.difficulty_4_button.state(['pressed'])
         elif difficulty == "0.10":
             self.difficulty_5_button.state(['pressed'])
+        elif difficulty == "0.05":
+            self.difficulty_6_button.state(['pressed'])
 
 
         self.bot = Bots(self.player_name, float(self.difficulty_level.get()))
@@ -127,7 +131,6 @@ class FiveOOneGame(tk.Tk):
     def start_over(self):
         # Reset all values
         self.score_left = 501
-        self.player_name.set("")
         self.aimed_at_number.set(1)
         self.aimed_at_section.set("")
         self.average_throw.set("0")
@@ -138,7 +141,7 @@ class FiveOOneGame(tk.Tk):
         self.double_button.state(['!pressed'])
         self.triple_button.state(['!pressed'])
         for button in [self.difficulty_1_button, self.difficulty_2_button, self.difficulty_3_button,
-                       self.difficulty_4_button, self.difficulty_5_button]:
+                       self.difficulty_4_button, self.difficulty_5_button,self.difficulty_6_button]:
             button.state(['!pressed'])
 
     def throw_dart(self):

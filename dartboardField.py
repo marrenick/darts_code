@@ -48,14 +48,11 @@ class dartboardField:
             angle_degrees += 360  # Ensure positive angle
 
         # Define the sector boundaries and corresponding scores
-        # komt 2maal voor, zie lijn 12
-        sector_boundaries = [9, 27, 45, 63, 81, 99, 117, 135, 153, 171, 189, 207, 225, 243, 261, 279, 297, 315, 333, 351]
-        sector_scores = [6, 13, 4, 18, 1, 20, 5, 12, 9, 14, 11, 8, 16, 7, 19, 3, 17, 2, 15, 10]  # Sector scores from 1 to 20
 
         # Find the sector the dart is in
         sector = None
-        for i in range(len(sector_boundaries)):
-            if angle_degrees < sector_boundaries[i]:
+        for i in range(len(self.sector_boundaries)):
+            if angle_degrees < self.sector_boundaries[i]:
                 sector = i
                 break
         if sector is None:
@@ -64,7 +61,7 @@ class dartboardField:
         # Check if the dart lands in the double or triple ring
         if distance <= double_ring_radius:
             # Determine the score based on the sector and distance from the center
-            score = sector_scores[sector]
+            score = self.sector_scores[sector]
 
             # Check if the dart lands in the double or triple ring
             # Double ring was larger! B4 number was 162.4!!
@@ -107,14 +104,11 @@ class dartboardField:
         if angle_degrees < 0:
             angle_degrees += 360  # Ensure positive angle
 
-        # Define the sector boundaries and corresponding scores
-        sector_boundaries = [9, 27, 45, 63, 81, 99, 117, 135, 153, 171, 189, 207, 225, 243, 261, 279, 297, 315, 333, 351]
-        sector_scores = [6, 13, 4, 18, 1, 20, 5, 12, 9, 14, 11, 8, 16, 7, 19, 3, 17, 2, 15, 10]  # Sector scores from 1 to 20
 
         # Find the sector the dart is in
         sector = None
-        for i in range(len(sector_boundaries)):
-            if angle_degrees < sector_boundaries[i]:
+        for i in range(len(self.sector_boundaries)):
+            if angle_degrees < self.sector_boundaries[i]:
                 sector = i
                 break
         if sector is None:
@@ -123,7 +117,7 @@ class dartboardField:
         # Check if the dart lands in the double or triple ring
         if distance <= double_ring_radius:
             # Determine the score based on the sector and distance from the center
-            score = sector_scores[sector]
+            score = self.sector_scores[sector]
 
             # Check if the dart lands in the double or triple ring
             if 161 <= distance <= 170:  # Double ring
