@@ -12,7 +12,7 @@ class integrator:
         self.sigma_y = sigma_y
         self.rho = rho
         self.dartboard = dartboardField()
-
+    # TODO : heatmap maken voor elk grid point expected value berekenen voor standaard deviatie
     def pdf_2d_normal(self, x, y, x0, y0, sigma_x, sigma_y, rho):
         z = ((x - x0) ** 2 / sigma_x ** 2 - 2 * rho * (x - x0) * (y - y0) / (sigma_x * sigma_y) + (
                 y - y0) ** 2 / sigma_y ** 2) / (2 * (1 - rho ** 2))

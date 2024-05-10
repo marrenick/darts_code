@@ -1,30 +1,45 @@
 import tkinter as tk
 from tkinter import ttk
 import random
-
+from PIL import ImageTk, Image
 from Bots import Bots
 
 
 class FiveOOneGame(tk.Tk):
+    # TODO: difficulty level button must be pressed first now, should be initialised on 1
+    # TODO : Initial picture
+    # TODO : add bull option
     def __init__(self):
         super().__init__()
 
         self.title("501 Game")
-        self.geometry("700x400")
+        self.geometry("1200x1000")
 
-        # Variables to store player name, aimed at number, and section
-        self.player_name = tk.StringVar()
+        # Variables to store selected player, aimed at number, section, average throw, number of throws, score left, and difficulty level
+        self.selected_player = tk.StringVar()
+
         self.aimed_at_number = tk.IntVar(value=1)
-        self.aimed_at_section = tk.StringVar()
+        self.aimed_at_section = tk.StringVar(value="TRIPLE")
         self.score_left = 501
 
         self.average_throw = tk.StringVar(value="0")
         self.num_throws = tk.StringVar(value="0")
         self.difficulty_level = tk.StringVar(value="1")
+        self.players = {
+            "Marnick": "graphics/profilepics/Marnick{0}.png".format(self.difficulty_level.get()),
+            "Warre": "graphics/profilepics/{0}.png".format(self.difficulty_level.get()),
+            "Jelle": "graphics/profilepics/{0}.png".format(self.difficulty_level.get())
+        }
 
         # Create widgets
-        ttk.Label(self, text="Player Name:").grid(row=0, column=0, padx=5, pady=5)
-        ttk.Entry(self, textvariable=self.player_name).grid(row=0, column=1, padx=5, pady=5)
+        ttk.Label(self, text="Select Player:").grid(row=0, column=0, padx=5, pady=5)
+        self.player_combobox = ttk.Combobox(self, textvariable=self.selected_player, values=list(self.players.keys()))
+        self.player_combobox.grid(row=0, column=1, padx=5, pady=5)
+        self.player_combobox.bind("<<ComboboxSelected>>", self.update_player_image)
+
+        ttk.Label(self, text="").grid(row=0, column=3, rowspan=9,padx=5, pady=5)
+        self.player_image_label = ttk.Label(self)
+        self.player_image_label.grid(row=0, column=3,rowspan=9,padx=5, pady=5)
 
         ttk.Label(self, text="Aim at Number:").grid(row=1, column=0, padx=5, pady=5)
         ttk.Scale(self, from_=1, to=20, orient=tk.HORIZONTAL, variable=self.aimed_at_number, length=400,
@@ -42,6 +57,7 @@ class FiveOOneGame(tk.Tk):
         self.double_button.grid(row=0, column=1, sticky="ew", padx=2)
         self.triple_button = ttk.Button(section_frame, text="TRIPLE", command=lambda: self.set_section("TRIPLE"))
         self.triple_button.grid(row=0, column=2, sticky="ew", padx=2)
+        self.triple_button.state(['pressed'])
 
         ttk.Label(self, text="Difficulty Level:").grid(row=3, column=0, padx=5, pady=5)
         difficulty_frame = ttk.Frame(self)
@@ -57,7 +73,8 @@ class FiveOOneGame(tk.Tk):
         self.difficulty_4_button.grid(row=0, column=3, sticky="ew", padx=2)
         self.difficulty_5_button = ttk.Button(difficulty_frame, text="5", command=lambda: self.set_difficulty("0.10"))
         self.difficulty_5_button.grid(row=0, column=4, sticky="ew", padx=2)
-        self.difficulty_6_button = ttk.Button(difficulty_frame, text="10", command=lambda: self.set_difficulty("0.05"))
+        self.difficulty_6_button = ttk.Button(difficulty_frame, text="INSANE",
+                                              command=lambda: self.set_difficulty("0.01"))
         self.difficulty_6_button.grid(row=0, column=5, sticky="ew", padx=2)
 
         ttk.Button(self, text="Throw", command=self.throw_dart).grid(row=5, columnspan=3, padx=5, pady=5)
@@ -78,8 +95,8 @@ class FiveOOneGame(tk.Tk):
         # Button to start over
         ttk.Button(self, text="Start Over", command=self.start_over).grid(row=10, columnspan=3, padx=5, pady=5)
 
-        self.bot = Bots(self.player_name.get(), self.difficulty_level.get())
-
+        self.bot = Bots(self.selected_player.get(), self.difficulty_level.get())
+        self.update_player_image()
 
     def update_aimed_number(self, value):
         # Round the value to the nearest integer
@@ -109,24 +126,36 @@ class FiveOOneGame(tk.Tk):
 
         # Highlight the selected button
         for button in [self.difficulty_1_button, self.difficulty_2_button, self.difficulty_3_button,
-                       self.difficulty_4_button, self.difficulty_5_button,self.difficulty_6_button]:
+                       self.difficulty_4_button, self.difficulty_5_button, self.difficulty_6_button]:
             button.state(['!pressed'])
         if difficulty == "1":
             self.difficulty_1_button.state(['pressed'])
+            button = "1"
         elif difficulty == "0.75":
             self.difficulty_2_button.state(['pressed'])
+            button = "2"
         elif difficulty == "0.5":
             self.difficulty_3_button.state(['pressed'])
+            button = "3"
         elif difficulty == "0.25":
             self.difficulty_4_button.state(['pressed'])
+            button = "4"
         elif difficulty == "0.10":
             self.difficulty_5_button.state(['pressed'])
-        elif difficulty == "0.05":
+            button = "5"
+        elif difficulty == "0.01":
             self.difficulty_6_button.state(['pressed'])
+            button = "6"
 
-
-        self.bot = Bots(self.player_name.get(), float(self.difficulty_level.get()))
+        self.bot = Bots(self.selected_player.get(), float(self.difficulty_level.get()))
         print("New difficulty " + str(self.difficulty_level.get()))
+
+        self.players = {
+            "Marnick": "graphics/profilepics/Marnick{0}.png".format(str(button)),
+            "Warre": "graphics/profilepics/Warre{0}.png".format(str(button)),
+            "Jelle": "graphics/profilepics/Jelle{0}.png".format(str(button))
+        }
+        self.update_player_image()
 
     def start_over(self):
         # Reset all values
@@ -135,29 +164,40 @@ class FiveOOneGame(tk.Tk):
         self.num_throws.set("0")
         self.score_label.config(text="Score Left: 501")
         self.throw_result_label.config(text="")
-        self.single_button.state(['!pressed'])
-        self.double_button.state(['!pressed'])
-        self.triple_button.state(['!pressed'])
-        for button in [self.difficulty_1_button, self.difficulty_2_button, self.difficulty_3_button,
-                       self.difficulty_4_button, self.difficulty_5_button,self.difficulty_6_button]:
-            button.state(['!pressed'])
+
+    def update_player_image(self, event=None):
+        # Update player image based on selected player
+        player_name = self.selected_player.get()
+        print(player_name)
+        print(self.players)
+        if player_name in self.players:
+            image_path = self.players[player_name]
+            try:
+                print("lol")
+                img = Image.open(image_path)
+                img = img.resize((400, 400))
+                player_image = ImageTk.PhotoImage(img)
+                self.player_image_label.configure(image=player_image)
+                self.player_image_label.image = player_image
+            except FileNotFoundError:
+                self.player_image_label.configure(image=None)
 
     def throw_dart(self):
         # Simulate throwing darts
         score, section = self.bot.throw(aimed_at_number=self.aimed_at_number.get(),
-                                    aimed_at_section=self.aimed_at_section.get(),
-                                    player=self.player_name.get())
-
+                                        aimed_at_section=self.aimed_at_section.get(),
+                                        player=self.selected_player.get())
+        # TODO AND DOUBLE
         if self.score_left == score:
-            result_text = f"{self.player_name.get()} threw {section} for {score} points and won the game."
+            result_text = f"{self.selected_player.get()} threw {section} for {score} points and won the game."
             self.score_left -= score
-        elif score+1 >= self.score_left:
-            result_text = f"{self.player_name.get()} threw {section} for {score} points and busted."
+        elif score + 1 >= self.score_left:
+            result_text = f"{self.selected_player.get()} threw {section} for {score} points and busted."
         else:
             # Update the score left
             self.score_left -= score
             # Display the result of the throw
-            result_text = f"{self.player_name.get()} threw {section} for {score} points."
+            result_text = f"{self.selected_player.get()} threw {section} for {score} points."
             # Update the score label
         self.score_label.config(text=f"Score Left: {self.score_left}")
 

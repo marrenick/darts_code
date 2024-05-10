@@ -9,7 +9,6 @@ centerpoints = datadude.database_read_data(schema='darts', table_name='dartboard
 
 class dartboardField:
     def __init__(self):
-        #komt 2maal voor, zie lijn 51-53
         self.sector_boundaries = [9, 27, 45, 63, 81, 99, 117, 135, 153, 171, 189, 207, 225, 243, 261, 279, 297, 315, 333, 351]
         self.sector_scores = [6, 13, 4, 18, 1, 20, 5, 12, 9, 14, 11, 8, 16, 7, 19, 3, 17, 2, 15, 10]
 
@@ -66,14 +65,11 @@ class dartboardField:
             # Check if the dart lands in the double or triple ring
             # Double ring was larger! B4 number was 162.4!!
             if 161 <= distance <= 170:  # Double ring
-                section = 'DOUBLE'
                 return score * 2
             # triple ring was larger on our board we use!? B4 was 99
             elif 97 <= distance <= 107:  # Triple ring
-                section = 'TRIPLE'
                 return score * 3
             else:
-                section = 'SINGLE'
                 return score  # Single ring
     def calculate_dart_section(self, x, y):
         # Calculate the distance from the origin (0,0)

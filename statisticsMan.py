@@ -13,30 +13,12 @@ def getMultiplier(section_hit_dart):
         return 0
     elif section_hit_dart == 'DOUBLE':
         return 2
-    elif section_hit_dart == 'UPPER SINGLE' or section_hit_dart == 'LOWER SINGLE':
+    elif section_hit_dart == 'UPPER SINGLE' or section_hit_dart == 'LOWER SINGLE' or section_hit_dart == 'SINGLE':
         return 1
     elif section_hit_dart == 'TRIPLE':
         return 3
     else:
         return 0
-
-
-def getRadius(section, number):
-    if section == 'MISS':
-        return 184
-    elif section == 'DOUBLE' and number != 25:
-        return 168
-    elif section == 'UPPER SINGLE':
-        return 142
-    elif section == 'TRIPLE':
-        return 104
-    elif section == 'LOWER SINGLE':
-        return 75
-    elif section == 'DOUBLE' and number == 25:
-        return 0
-    elif number == 25:
-        return 12
-
 
 class statisticsMan:
     def __init__(self, data):
@@ -46,6 +28,7 @@ class statisticsMan:
         self.data = data
 
     def calculateAverageThrow(self, player,number,section):
+        # TODO : uitbreiden naar All numbers en All sections
         data_filtered = self.data.loc[self.data['player'] == player]
         data_filtered = data_filtered.loc[self.data['aims_at_section'] == str(section)]
         data_filtered = data_filtered.loc[self.data['aims_at_number'] == str(number)]
@@ -62,11 +45,12 @@ class statisticsMan:
 
             data_filtered['average_throw'] = result
 
-
             average = data_filtered[['average_throw']].mean(axis=0)
+
             return round(average.values[0],2),data_filtered.shape[0]
 
     def calculateStandardDeviation(self, player, number, section):
+        # TODO : uitbreiden naar All numbers en All sections
         std = 0
         data_filtered = self.data.loc[self.data['player'] == player]
         data_filtered = data_filtered.loc[self.data['aims_at_section'] == str(section)]
@@ -83,6 +67,7 @@ class statisticsMan:
             return round(std_normalised,2)
 
     def calculateCovarianceMatrix(self,player,number,section):
+        # TODO : uitbreiden naar All numbers en All sections
         df = pd.DataFrame(columns = ['x','y'])
         data_filtered = self.data.loc[self.data['player'] == str(player)]
         data_filtered = data_filtered.loc[self.data['aims_at_number'] == str(number)]

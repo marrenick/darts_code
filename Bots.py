@@ -8,6 +8,8 @@ from statisticsMan import statisticsMan
 
 class Bots:
     def __init__(self, player, difficulty):
+
+
         self.player = player
         self.dartboard = dartboardField()
         self.difficulty = difficulty
@@ -35,25 +37,14 @@ class Bots:
 if __name__ == '__main__':
     player = input('Choose opponent:')
     difficulty = 0.45
-    cova = statisticsMan.calculateCovarianceMatrix(player, 20, 'TRIPLE').mul(difficulty)
-    std_x,std_y = statisticsMan.std_from_cov(cova)
-    print(std_x,std_y)
+    
     bot = Bots(player, difficulty)
+    cova = bot.statisticsman.calculateCovarianceMatrix(player=player, number=20, section='TRIPLE').mul(difficulty)
+    std_x, std_y = bot.statisticsman.std_from_cov(cova)
+    print(std_x, std_y)
     while True:
         aimed_at_number = input('Aim at number: ')
         aimed_at_section = input('Aim at section: ')
         throw, section = bot.throw(player, aimed_at_number, aimed_at_section)
         print(str(throw))
 
-
-    def temp(self):
-        plt.figure(1)
-
-        plt.plot(x, y, 'x')
-        ax = plt.gca()
-        ax.set_aspect('equal')
-        plt.figure(2)
-
-        # plt.hist(np.array(throws), bins=range(0, max(throws) + 1, 1), density=True)
-
-        plt.show()
