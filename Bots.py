@@ -18,7 +18,7 @@ class Bots:
         self.statisticsman = statisticsMan(data)
 
     def throw(self, player, aimed_at_number, aimed_at_section):
-        x_centre, y_centre = self.dartbord.get_coordinates_from_throw(aimed_at_number, aimed_at_section)
+        x_centre, y_centre = self.dartboard.get_coordinates_from_throw(aimed_at_number, aimed_at_section)
         cov = self.statisticsman.calculateCovarianceMatrix(player, aimed_at_number, aimed_at_section).mul(
             self.difficulty)
         if cov.empty:
