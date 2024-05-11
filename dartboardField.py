@@ -124,6 +124,14 @@ class dartboardField:
                 return str(score)
 
     def get_coordinates_from_throw(self, number, section):
+        # TODO : Centerpoint van single bull moet bv de singl bull van de 20 krijgen.
+        #  Nu shift ik nog manueel  met de offset de cp maar moet in db
+        print(number,section)
+        print(centerpoints)
+        offset = [0,0]
+        if number == 25 and section == "UPPER SINGLE":
+            section = "SINGLE"
+            offset = [0,11]
         cp = centerpoints.loc[centerpoints['number'] == str(number)]
         cp = cp.loc[cp['section'] == str(section)]
-        return float(cp['_x'].values[0]), float(cp['_y'].values[0])
+        return float(cp['_x'].values[0])+offset[0], float(cp['_y'].values[0])+offset[1]

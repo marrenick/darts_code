@@ -13,8 +13,8 @@ class FiveOOneGame(tk.Tk):
         super().__init__()
 
         self.title("501 Game")
-        self.geometry("1400x1400")
-
+        self.geometry("1800x1400")
+        self.resizable(True, True)
         # Variables to store selected player, aimed at number, section, average throw, number of throws, score left, and difficulty level
         self.selected_player = tk.StringVar()
 
@@ -37,15 +37,17 @@ class FiveOOneGame(tk.Tk):
         self.player_combobox.grid(row=0, column=1, padx=5, pady=5)
         self.player_combobox.bind("<<ComboboxSelected>>", self.update_player_image)
 
-        ttk.Label(self, text="").grid(row=0, column=3, rowspan=9,padx=5, pady=5)
+        ttk.Label(self, text="").grid(row=12, column=1, rowspan=19,padx=5, pady=5)
         self.player_image_label = ttk.Label(self)
-        self.player_image_label.grid(row=0, column=3,rowspan=9,padx=5, pady=5)
+        self.player_image_label.grid(row=12, column=1,rowspan=19,padx=5, pady=5)
 
         ttk.Label(self, text="Aim at Number:").grid(row=1, column=0, padx=5, pady=5)
-        ttk.Scale(self, from_=1, to=20, orient=tk.HORIZONTAL, variable=self.aimed_at_number, length=400,
+        ttk.Scale(self, from_=1, to=20, orient=tk.HORIZONTAL, variable=self.aimed_at_number, length=300,
                   command=self.update_aimed_number).grid(row=1, column=1, padx=5, pady=5)
+        ttk.Button(self, text="BULL", command=lambda: self.update_aimed_number(25)).grid(row=1, column=2, padx=5,
+                                                                                         pady=5)
         self.aimed_number_label = ttk.Label(self, textvariable=self.aimed_at_number)
-        self.aimed_number_label.grid(row=1, column=2, padx=5, pady=5)
+        self.aimed_number_label.grid(row=1, column=3, padx=5, pady=5)
 
         ttk.Label(self, text="Aim at Section:").grid(row=2, column=0, padx=5, pady=5)
         section_frame = ttk.Frame(self)
@@ -96,7 +98,7 @@ class FiveOOneGame(tk.Tk):
         ttk.Button(self, text="Start Over", command=self.start_over).grid(row=10, columnspan=3, padx=5, pady=5)
 
         self.canvas = tk.Canvas(self, width=894, height=886)
-        self.canvas.grid(row=11, columnspan=5, padx=5, pady=5)
+        self.canvas.grid(row=0, column = 5,rowspan=30, padx=5, pady=5)
 
         # Load dartsboard image
         self.dartsboard_image = Image.open("graphics/output_image.png")
