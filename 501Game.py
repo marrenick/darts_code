@@ -101,7 +101,7 @@ class FiveOOneGame(tk.Tk):
         self.canvas.grid(row=0, column = 5,rowspan=30, padx=5, pady=5)
 
         # Load dartsboard image
-        self.dartsboard_image = Image.open("graphics/output_image.png")
+        self.dartsboard_image = Image.open("./graphics/output_image.png")
         self.dartsboard_photo = ImageTk.PhotoImage(self.dartsboard_image)
         self.canvas.create_image(894, 886, anchor=tk.SE, image=self.dartsboard_photo)
 
