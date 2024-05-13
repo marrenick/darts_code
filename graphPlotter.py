@@ -22,7 +22,8 @@ def process_data(x, y, dartboard, cov_dict, statisticsman):
     rho = statisticsman.calculate_correlation(cov, std_x, std_y)
 
     integrator = Integrator(x_0, y_0, std_x, std_y, rho, dartboard)  # Example usage of Integrator
-
+    if y_0 == -200:
+        print('Starting on row ' + str(x_0))
     return integrator.integrate()
 
 

@@ -30,6 +30,6 @@ if __name__ == '__main__':
     print('Standard deviation from the covariance in the Y-direction is {0}'.format(std_y))
 
     graphPlotter = graphPlotter()
-    graphPlotter.make_heatmap(dartboard=dartbord, grid_size=1, player=player,processes=2)
+    graphPlotter.make_heatmap(dartboard=dartbord, grid_size=10, player=player, processes=2)
 
     corr = statisticsman.calculate_correlation(cov, std_x, std_y)
