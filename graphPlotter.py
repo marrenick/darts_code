@@ -1,4 +1,5 @@
 import math
+import multiprocessing
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -7,6 +8,21 @@ from Integrator import Integrator
 from dartboardField import dartboardField
 from dataRetriever import dataRetriever
 from statisticsMan import statisticsMan
+
+
+def process_data(x, y, dartboard, cov_dict, statisticsman):
+    x_0, y_0 = x, y
+    number = dartboard.calculate_dart_number(x_0, y_0)
+    section = dartboard.calculate_dart_section(x_0, y_0)
+
+    cov = cov_dict.get(section + str(number))
+    std_x, std_y = statisticsman.std_from_cov(cov)
+
+    rho = statisticsman.calculate_correlation(cov, std_x, std_y)
+
+    integrator = Integrator(x_0, y_0, std_x, std_y, rho, dartboard)  # Example usage of Integrator
+
+    return integrator.integrate()
 
 
 class graphPlotter:
@@ -33,33 +49,43 @@ class graphPlotter:
             for number in dartboard.sector_scores + [0, 25]:
                 cov_dict[section + str(number)] = self.statisticsman.calculateCovarianceMatrix(player, number, section)
 
-        for i in range(len(x)):
-            x_0 = x[i]
-            print('Starting row with coordinates ' + str(x_0))
-            for j in range(len(y)):
-                y_0 = y[j]
-                number = dartboard.calculate_dart_number(x_0, y_0)
-                section = dartboard.calculate_dart_section(x_0, y_0)
+        # Create a multiprocessing pool
+        pool = multiprocessing.Pool(processes=2)
 
-                cov = cov_dict.get(section + str(number))
-                std_x, std_y = self.statisticsman.std_from_cov(cov)
+        # Apply the function to the data using multiprocessing
+        results = pool.starmap(process_data, [(x0, y0, dartboard, cov_dict, self.statisticsman) for x0 in x for y0 in y])
+        expected_values = np.array(results)
+        expected_values = np.reshape(expected_values, (-1, x.size))
+        #Close the pool
+        pool.close()
+        pool.join()
 
-                rho = self.statisticsman.calculate_correlation(cov, std_x, std_y)
+        # Process the results as needed
 
-                integrator = Integrator(x_0, y_0, std_x, std_y, rho, dartboard)
-                EV = integrator.integrate()
-
-                expected_values[i, j] = EV
+        #for i in range(len(x)):
+         #   x_0 = x[i]
+          #  print('Starting row with coordinates ' + str(x_0))
+           # for j in range(len(y)):
+            #    y_0 = y[j]
+             #   number = dartboard.calculate_dart_number(x_0, y_0)
+              #  section = dartboard.calculate_dart_section(x_0, y_0)
+#
+ #               cov = cov_dict.get(section + str(number))
+  #              std_x, std_y = self.statisticsman.std_from_cov(cov)
+#
+ #               rho = self.statisticsman.calculate_correlation(cov, std_x, std_y)
+#
+ #               integrator = Integrator(x_0, y_0, std_x, std_y, rho, dartboard)
+  #              EV = integrator.integrate()
+#
+ #               expected_values[i, j] = EV
 
         max_index = np.unravel_index(np.argmax(expected_values), expected_values.shape)
         X, Y = np.meshgrid(x, y)
         max_x = X[max_index]
         max_y = Y[max_index]
 
-
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
-
-
 
         print('Maximum expected value is {0} on number {1} and section {2}.'.format(
             expected_values[max_index],
@@ -97,7 +123,7 @@ class graphPlotter:
 
         # Add number labels to the dartboard
         for number, boundary in zip(dartboard.sector_scores, dartboard.sector_boundaries):
-            boundary = math.radians(boundary-9)
+            boundary = math.radians(boundary - 9)
             x_text = (outer_double_radius + 10) * np.cos(boundary)
             y_text = (outer_double_radius + 10) * np.sin(boundary)
             ax2.text(x_text, y_text, str(number), fontsize=12, ha='center', va='center')
