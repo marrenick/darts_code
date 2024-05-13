@@ -33,7 +33,7 @@ class graphPlotter:
         data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
         self.statisticsman = statisticsMan(data)
 
-    def make_heatmap(self, dartboard, grid_size, player):
+    def make_heatmap(self, dartboard, grid_size, player,processes):
         #timer
         start_time=time.time()
 
@@ -54,7 +54,7 @@ class graphPlotter:
                 cov_dict[section + str(number)] = self.statisticsman.calculateCovarianceMatrix(player, number, section)
 
         # Create a multiprocessing pool
-        pool = multiprocessing.Pool(processes=2)
+        pool = multiprocessing.Pool(processes=processes)
 
         # Apply the function to the data using multiprocessing
         results = pool.starmap(process_data, [(x0, y0, dartboard, cov_dict, self.statisticsman) for x0 in x for y0 in y])
