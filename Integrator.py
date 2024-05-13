@@ -23,9 +23,9 @@ class Integrator:
                                   self.rho) * self.dartboard.calculate_dart_score(x, y)
 
     def integrate(self):
-        # Integrate over 3 standard deviations
-        x_lower = self.x0-2*self.sigma_x
-        x_upper = self.x0+2*self.sigma_x
+        # Integrate over 2 standard deviations
+        x_lower = self.x0 - 2 * self.sigma_x
+        x_upper = self.x0 + 2 * self.sigma_x
         y_lower = self.y0 - 2 * self.sigma_y
         y_upper = self.y0 + 2 * self.sigma_y
 

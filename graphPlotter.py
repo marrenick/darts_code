@@ -17,11 +17,11 @@ class graphPlotter:
         self.statisticsman = statisticsMan(data)
 
     def make_heatmap(self, dartboard, grid_size, player):
-        double_bull_radius = 6.35
-        single_bull_radius = 15.9
-        inner_triple_radius = 99
+        double_bull_radius = 7
+        single_bull_radius = 16
+        inner_triple_radius = 97
         outer_triple_radius = 107
-        inner_double_radius = 162
+        inner_double_radius = 161
         outer_double_radius = 170
         #
         x = np.arange(-200, 200, grid_size)
@@ -97,9 +97,9 @@ class graphPlotter:
 
         # Add number labels to the dartboard
         for number, boundary in zip(dartboard.sector_scores, dartboard.sector_boundaries):
-            boundary = math.radians(boundary)
-            x_text = (outer_double_radius - 30) * np.cos(boundary)
-            y_text = (outer_double_radius - 30) * np.sin(boundary)
+            boundary = math.radians(boundary-9)
+            x_text = (outer_double_radius + 10) * np.cos(boundary)
+            y_text = (outer_double_radius + 10) * np.sin(boundary)
             ax2.text(x_text, y_text, str(number), fontsize=12, ha='center', va='center')
 
         plt.tight_layout()
