@@ -70,17 +70,23 @@ class statisticsMan:
         # TODO : uitbreiden naar All numbers en All sections
         df = pd.DataFrame(columns = ['x','y'])
         data_filtered = self.data.loc[self.data['player'] == str(player)]
-        data_filtered = data_filtered.loc[self.data['aims_at_number'] == str(number)]
-        data_filtered = data_filtered.loc[self.data['aims_at_section'] == str(section)]
-
-        if data_filtered.shape[0] ==0:
-            print('No data available.')
-            return pd.DataFrame()
+        data_filtered = data_filtered.loc[data_filtered['aims_at_number'] == str(number)]
+        if data_filtered.shape[0] == 0:
+            data_filtered = self.data.loc[self.data['player'] == str(player)]
+            data_filtered = data_filtered.loc[data_filtered['aims_at_number'] == '20']
+            data_filtered = data_filtered.loc[data_filtered['aims_at_section'] == 'TRIPLE']
         else:
-            for index in data_filtered.index:
-                coords = [data_filtered['x'][index],data_filtered['y'][index]]
-                df.loc[len(df)] = coords
-            return df.cov()
+            data_filtered = data_filtered.loc[data_filtered['aims_at_section'] == str(section)]
+            if data_filtered.shape[0] == 0:
+                # print('No data available. Using the data of the player on triple 20.')
+                data_filtered = self.data.loc[self.data['player'] == str(player)]
+                data_filtered = data_filtered.loc[data_filtered['aims_at_number'] == str(number)]
+
+        for index in data_filtered.index:
+            coords = [data_filtered['x'][index], data_filtered['y'][index]]
+            df.loc[len(df)] = coords
+
+        return df.cov()
 
     def std_from_cov(self,cov):
 
