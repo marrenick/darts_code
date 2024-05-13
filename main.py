@@ -9,7 +9,7 @@ import numpy as np
 dartbord = dartboardField()
 
 if __name__ == '__main__':
-    player = 'Warre'
+    player = 'Marnick'
     number = 25
     section = 'DOUBLE'
     # ./om te refereren naar zelfde folder als .py files

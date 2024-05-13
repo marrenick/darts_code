@@ -1,5 +1,6 @@
 import math
 import multiprocessing
+import time
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -33,6 +34,9 @@ class graphPlotter:
         self.statisticsman = statisticsMan(data)
 
     def make_heatmap(self, dartboard, grid_size, player):
+        #timer
+        start_time=time.time()
+
         double_bull_radius = 7
         single_bull_radius = 16
         inner_triple_radius = 97
@@ -85,7 +89,10 @@ class graphPlotter:
         max_x = X[max_index]
         max_y = Y[max_index]
 
+
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+
+
 
         print('Maximum expected value is {0} on number {1} and section {2}.'.format(
             expected_values[max_index],
@@ -127,6 +134,9 @@ class graphPlotter:
             x_text = (outer_double_radius + 10) * np.cos(boundary)
             y_text = (outer_double_radius + 10) * np.sin(boundary)
             ax2.text(x_text, y_text, str(number), fontsize=12, ha='center', va='center')
+
+        runtime = time.time()-start_time
+        print ("runtime is " + str(round(runtime,2)) + "seconden")
 
         plt.tight_layout()
         plt.show()
