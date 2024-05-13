@@ -1,6 +1,5 @@
 import numpy as np
-from scipy.integrate import dblquad
-
+from scipy.integrate import dblquad, nquad
 
 
 class Integrator:
@@ -23,12 +22,12 @@ class Integrator:
                                   self.rho) * self.dartboard.calculate_dart_score(x, y)
 
     def integrate(self):
-        # Integrate over 2 standard deviations
-        x_lower = self.x0 - 2 * self.sigma_x
-        x_upper = self.x0 + 2 * self.sigma_x
-        y_lower = self.y0 - 2 * self.sigma_y
-        y_upper = self.y0 + 2 * self.sigma_y
+        # Integrate over 3 standard deviations
+        x_lower = self.x0 - 3 * self.sigma_x
+        x_upper = self.x0 + 3 * self.sigma_x
+        y_lower = self.y0 - 3 * self.sigma_y
+        y_upper = self.y0 + 3 * self.sigma_y
+        options = {'limit': 50, 'epsabs': 0.1, 'epsrel': 1}
+        expected_value = nquad(self.integrand, [[x_lower, x_upper],[y_lower, y_upper]], opts=[options, options])
 
-        expected_value, _ = dblquad(self.integrand,y_lower ,y_upper ,
-                                    x_lower, x_upper, epsabs=0.01, epsrel=0.6)
-        return expected_value
+        return expected_value[0]

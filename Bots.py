@@ -28,7 +28,8 @@ class Bots:
                 self.difficulty)
         x, y = np.random.multivariate_normal([x_centre, y_centre], cov, 1).T
         throws = [self.dartboard.calculate_dart_score(x_throw, y_throw) for x_throw in x for y_throw in y]
-        sections = [self.dartboard.calculate_dart_section(x_throw, y_throw) for x_throw in x for y_throw in y]
+        sections = [str(self.dartboard.calculate_dart_section(x_throw, y_throw))+str(self.dartboard.calculate_dart_number(x_throw, y_throw))
+                    for x_throw in x for y_throw in y]
         return throws[0], sections[0], [x, y]
 
 

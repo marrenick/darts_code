@@ -24,7 +24,7 @@ def process_data(x, y, dartboard, cov_dict, statisticsman):
     integrator = Integrator(x_0, y_0, std_x, std_y, rho, dartboard)  # Example usage of Integrator
     if y_0 == -200:
         print('Starting on row ' + str(x_0))
-    return integrator.integrate()
+    return round(integrator.integrate(),2)
 
 
 class graphPlotter:
@@ -47,7 +47,7 @@ class graphPlotter:
         #
         x = np.arange(-200, 200, grid_size)
         y = np.arange(-200, 200, grid_size)
-        expected_values = np.zeros((len(x), len(y)))
+        # Calculate covariance for every number ONCE  and store them in dict to save time
         cov_dict = {}
 
         for section in ['SINGLE', 'DOUBLE', 'TRIPLE', 'MISS']:
@@ -65,25 +65,6 @@ class graphPlotter:
         pool.close()
         pool.join()
 
-        # Process the results as needed
-
-        #for i in range(len(x)):
-         #   x_0 = x[i]
-          #  print('Starting row with coordinates ' + str(x_0))
-           # for j in range(len(y)):
-            #    y_0 = y[j]
-             #   number = dartboard.calculate_dart_number(x_0, y_0)
-              #  section = dartboard.calculate_dart_section(x_0, y_0)
-#
- #               cov = cov_dict.get(section + str(number))
-  #              std_x, std_y = self.statisticsman.std_from_cov(cov)
-#
- #               rho = self.statisticsman.calculate_correlation(cov, std_x, std_y)
-#
- #               integrator = Integrator(x_0, y_0, std_x, std_y, rho, dartboard)
-  #              EV = integrator.integrate()
-#
- #               expected_values[i, j] = EV
 
         max_index = np.unravel_index(np.argmax(expected_values), expected_values.shape)
         X, Y = np.meshgrid(x, y)
@@ -91,8 +72,7 @@ class graphPlotter:
         max_y = Y[max_index]
 
 
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
-
+        fig, (ax1) = plt.subplots(1, 1, figsize=(6, 6))
 
 
         print('Maximum expected value is {0} on number {1} and section {2}.'.format(
@@ -100,9 +80,13 @@ class graphPlotter:
             dartboard.calculate_dart_number(max_y, max_x),
             dartboard.calculate_dart_section(max_y, max_x)))
         heatmap = ax1.pcolormesh(Y, X, expected_values, cmap='RdYlBu_r', shading='auto')
-        fig.colorbar(heatmap, ax=ax1, label='Expected Value')
-        ax1.set_xlim(-200, 200)
-        ax1.set_ylim(-200, 200)
+
+        levels = int(round(expected_values[max_index]*2,0))
+        contour = ax1.contourf(Y,X,expected_values,levels = levels,cmap='inferno',alpha = 1)
+
+        fig.colorbar(contour, ax=ax1, label='Expected Value')
+        ax1.set_xlim(-200, 200-grid_size)
+        ax1.set_ylim(-200, 200-grid_size)
         ax1.set_xlabel('X')
         ax1.set_ylabel('Y')
         ax1.set_aspect('equal')
@@ -110,23 +94,18 @@ class graphPlotter:
 
         # Plot the dartboard in the second subplot
         theta = np.linspace(0, 2 * np.pi, 100)
-        ax2.plot(double_bull_radius * np.cos(theta), double_bull_radius * np.sin(theta), 'k-', lw=1)  # Double bull
-        ax2.plot(single_bull_radius * np.cos(theta), single_bull_radius * np.sin(theta), 'k-', lw=1)  # Single bull
-        ax2.plot(inner_triple_radius * np.cos(theta), inner_triple_radius * np.sin(theta), 'k-', lw=1)  # Inner triple
-        ax2.plot(outer_triple_radius * np.cos(theta), outer_triple_radius * np.sin(theta), 'k-', lw=1)  # Outer triple
-        ax2.plot(inner_double_radius * np.cos(theta), inner_double_radius * np.sin(theta), 'k-', lw=1)  # Inner double
-        ax2.plot(outer_double_radius * np.cos(theta), outer_double_radius * np.sin(theta), 'k-', lw=1)  # Outer double
-        ax2.plot(max_y, max_x, 'ko', markersize=3)
-        ax2.set_aspect('equal')
-        ax2.set_xlim(-200, 200)
-        ax2.set_ylim(-200, 200)
-        ax2.set_xlabel('X')
-        ax2.set_ylabel('Y')
-        ax2.set_title('Dartboard')
+        ax1.plot(double_bull_radius * np.cos(theta), double_bull_radius * np.sin(theta), 'k-', lw=1)  # Double bull
+        ax1.plot(single_bull_radius * np.cos(theta), single_bull_radius * np.sin(theta), 'k-', lw=1)  # Single bull
+        ax1.plot(inner_triple_radius * np.cos(theta), inner_triple_radius * np.sin(theta), 'k-', lw=1)  # Inner triple
+        ax1.plot(outer_triple_radius * np.cos(theta), outer_triple_radius * np.sin(theta), 'k-', lw=1)  # Inner triple
+        ax1.plot(inner_double_radius * np.cos(theta), inner_double_radius * np.sin(theta), 'k-', lw=1)  # Inner double
+        ax1.plot(outer_double_radius * np.cos(theta), outer_double_radius * np.sin(theta), 'k-', lw=1)  # Outer double
+        ax1.plot(max_y, max_x, 'ko', markersize=3)
+
         # Plot radial outward lines from outer bull wire to outer double wire
         for boundary in dartboard.sector_boundaries:
             boundary = math.radians(boundary)
-            ax2.plot([single_bull_radius * np.cos(boundary), outer_double_radius * np.cos(boundary)],
+            ax1.plot([single_bull_radius * np.cos(boundary), outer_double_radius * np.cos(boundary)],
                      [single_bull_radius * np.sin(boundary), outer_double_radius * np.sin(boundary)], 'k-', lw=1)
 
         # Add number labels to the dartboard
@@ -134,10 +113,10 @@ class graphPlotter:
             boundary = math.radians(boundary - 9)
             x_text = (outer_double_radius + 10) * np.cos(boundary)
             y_text = (outer_double_radius + 10) * np.sin(boundary)
-            ax2.text(x_text, y_text, str(number), fontsize=12, ha='center', va='center')
+            ax1.text(x_text, y_text, str(number), fontsize=12, ha='center', va='center')
 
         runtime = time.time()-start_time
-        print ("runtime is " + str(round(runtime,2)) + "seconden")
+        print ("runtime is " + str(round(runtime,2)) + " seconden")
 
         plt.tight_layout()
         plt.show()
