@@ -36,7 +36,7 @@ class graphPlotter:
 
     def make_heatmap(self, dartboard, grid_size, player,processes):
         #timer
-        start_time=time.time()
+        start_time = time.time()
 
         double_bull_radius = 7
         single_bull_radius = 16
