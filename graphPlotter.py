@@ -34,7 +34,7 @@ class graphPlotter:
         data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
         self.statisticsman = statisticsMan(data)
 
-    def make_heatmap(self, dartboard, grid_size, player,processes):
+    def make_heatmap(self, dartboard, grid_size, player, processes):
         #timer
         start_time = time.time()
 
@@ -79,18 +79,18 @@ class graphPlotter:
             expected_values[max_index],
             dartboard.calculate_dart_number(max_y, max_x),
             dartboard.calculate_dart_section(max_y, max_x)))
-        heatmap = ax1.pcolormesh(Y, X, expected_values, cmap='RdYlBu_r', shading='auto')
 
         levels = int(round(expected_values[max_index]*2,0))
         contour = ax1.contourf(Y,X,expected_values,levels = levels,cmap='inferno',alpha = 1)
 
-        fig.colorbar(contour, ax=ax1, label='Expected Value')
+        fig.colorbar(contour, ax=ax1, label='Expected Value', fraction=0.046, pad=0.04,ticks = np.arange(0,levels/2,1))
+
         ax1.set_xlim(-200, 200-grid_size)
         ax1.set_ylim(-200, 200-grid_size)
         ax1.set_xlabel('X')
         ax1.set_ylabel('Y')
         ax1.set_aspect('equal')
-        ax1.set_title('Heatmap expected value')
+
 
         # Plot the dartboard in the second subplot
         theta = np.linspace(0, 2 * np.pi, 100)
@@ -119,4 +119,5 @@ class graphPlotter:
         print ("runtime is " + str(round(runtime,2)) + " seconden")
 
         plt.tight_layout()
-        plt.show()
+
+        return fig
