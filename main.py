@@ -33,7 +33,7 @@ if __name__ == '__main__':
     graphPlotter = graphPlotter()
     #graphPlotter.make_heatmap(dartboard=dartbord, grid_size=10, player=player,processes=6)
     #plt.show()
-    #videoguy = videoGuy(graphPlotter)
-    #videoguy.make_heatmaps(dartbord, std_min = 1, std_max = 100, step_size=1, save_folder='plots/dummy_step1', grid_size=20, processes=6)
-    #videoguy.make_heatmap_video('plots/dummy_step1',framerate=10,video_name='dummy_step1')
+    videoguy = videoGuy(graphPlotter)
+    videoguy.make_heatmaps(dartbord, std_min = 0.1, std_max = 50, step_size=0.1, save_folder='plots/dummy_step0.1', grid_size=10, processes=6)
+    videoguy.make_heatmap_video(image_folder='plots/dummy_step0.1',framerate=10,video_name='dummy_step0.1')
 

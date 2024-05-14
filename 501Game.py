@@ -28,7 +28,8 @@ class FiveOOneGame(tk.Tk):
         self.players = {
             "Marnick": "graphics/profilepics/Marnick{0}.png".format(self.difficulty_level.get()),
             "Warre": "graphics/profilepics/Warre{0}.png".format(self.difficulty_level.get()),
-            "Jelle": "graphics/profilepics/Jelle{0}.png".format(self.difficulty_level.get())
+            "Jelle": "graphics/profilepics/Jelle{0}.png".format(self.difficulty_level.get()),
+            'dummy1' : "graphics/profilepics/Warre{0}.png".format(self.difficulty_level.get())
         }
 
         # Create widgets
