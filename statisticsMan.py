@@ -69,6 +69,39 @@ class statisticsMan:
             std_normalised = math.sqrt(std / data_filtered.shape[0])
             return round(std_normalised, 2)
 
+    def calculateCovarianceMatrix(self, player, number, section):
+        if 'dummy' in player:
+            std = float(re.findall(r"[-+]?\d*\.?\d+|[-+]?\d+", player)[0])
+            cov_matrix = [[std ** 2, 0],
+                          [0, std ** 2]]
+
+            # Create DataFrame
+            return pd.DataFrame(cov_matrix, columns=['x', 'y'])
+        else:
+            # TODO : uitbreiden naar All numbers en All sections
+            df = pd.DataFrame(columns=['x', 'y'])
+            data_filtered = self.data.loc[self.data['player'] == str(player)]
+            data_filtered = data_filtered.loc[data_filtered['aims_at_number'] == str(number)]
+            if data_filtered.shape[0] == 0:
+                data_filtered = self.data.loc[self.data['player'] == str(player)]
+                data_filtered = data_filtered.loc[data_filtered['aims_at_number'] == '20']
+                data_filtered = data_filtered.loc[data_filtered['aims_at_section'] == 'TRIPLE']
+            else:
+                data_filtered = data_filtered.loc[data_filtered['aims_at_section'] == str(section)]
+                if data_filtered.shape[0] == 0:
+                    # print('No data available. Using the data of the player on triple 20.')
+                    data_filtered = self.data.loc[self.data['player'] == str(player)]
+                    data_filtered = data_filtered.loc[data_filtered['aims_at_number'] == str(number)]
+
+            # data_filtered = self.data.loc[self.data['player'] == str(player)]
+            # data_filtered = data_filtered.loc[data_filtered['aims_at_number'] == '20']
+            # data_filtered = data_filtered.loc[data_filtered['aims_at_section'] == 'TRIPLE']
+
+            for index in data_filtered.index:
+                coords = [data_filtered['x'][index], data_filtered['y'][index]]
+                df.loc[len(df)] = coords
+        return df.cov()
+
     def calculateCovarianceMatrix_new(self, player, number, section):
         # Dummy player that throws perfect normal in 2d. Put std in player name. Example : dummy10.2 has std = 10.2
         if 'dummy' in player:
@@ -84,7 +117,7 @@ class statisticsMan:
             data_filtered = self.data.loc[self.data['player'] == str(player)]
 
             # ALs de variable leeg wordt gegeven of het getal zit niet in de data, neem gemiddelde van alle data
-            if not number or number not in data_filtered['aims_at_number'].values :
+            if not number or number not in data_filtered['aims_at_number'].values:
                 for number in data_filtered['aims_at_number'].values:
                     data_filtered = data_filtered.loc[self.data['aims_at_number'] == str(number)]
 
@@ -96,8 +129,6 @@ class statisticsMan:
                                 coords = [data_filtered['x'][index], data_filtered['y'][index]]
                                 df.loc[len(df)] = coords
                             cov = df.cov()
-
-
 
             return df.cov()
 

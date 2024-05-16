@@ -18,6 +18,7 @@ class Integrator:
         return np.exp(-z) / (2 * np.pi * sigma_x * sigma_y * np.sqrt(1 - rho ** 2))
 
     def integrand(self, x, y):
+
         return self.pdf_2d_normal(x, y, self.x0, self.y0, self.sigma_x, self.sigma_y,
                                   self.rho) * self.dartboard.calculate_dart_score(x, y)
 
