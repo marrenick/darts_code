@@ -1,3 +1,4 @@
+import datetime
 import math
 import multiprocessing
 import time
@@ -24,18 +25,19 @@ def process_data(x, y, dartboard, cov_dict, statisticsman):
     integrator = Integrator(x_0, y_0, std_x, std_y, rho, dartboard)  # Example usage of Integrator
     if y_0 == -200:
         print('Starting on row ' + str(x_0))
-    return round(integrator.integrate(),2)
+    return round(integrator.integrate(), 2)
 
 
 class graphPlotter:
     def __init__(self):
 
         datadude = dataRetriever('./connection.ini')
-        data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
-        self.statisticsman = statisticsMan(data)
+        self.data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
+
 
     def make_heatmap(self, dartboard, grid_size, player, processes):
-        #timer
+        # timer
+        self.statisticsman = statisticsMan(self.data)
         start_time = time.time()
 
         double_bull_radius = 7
@@ -58,39 +60,37 @@ class graphPlotter:
         pool = multiprocessing.Pool(processes=processes)
 
         # Apply the function to the data using multiprocessing
-        results = pool.starmap(process_data, [(x0, y0, dartboard, cov_dict, self.statisticsman) for x0 in x for y0 in y])
+        results = pool.starmap(process_data,
+                               [(x0, y0, dartboard, cov_dict, self.statisticsman) for x0 in x for y0 in y])
         expected_values = np.array(results)
         expected_values = np.reshape(expected_values, (-1, x.size))
-        #Close the pool
+        # Close the pool
         pool.close()
         pool.join()
-
 
         max_index = np.unravel_index(np.argmax(expected_values), expected_values.shape)
         X, Y = np.meshgrid(x, y)
         max_x = X[max_index]
         max_y = Y[max_index]
 
-
         fig, (ax1) = plt.subplots(1, 1, figsize=(6, 6))
-
 
         print('Maximum expected value is {0} on number {1} and section {2}.'.format(
             expected_values[max_index],
             dartboard.calculate_dart_number(max_y, max_x),
             dartboard.calculate_dart_section(max_y, max_x)))
 
-        levels = int(round(expected_values[max_index]*2,0))
-        contour = ax1.contourf(Y,X,expected_values,levels = levels,cmap='inferno',alpha = 1)
+        levels = int(round(expected_values[max_index] * 2, 0))
+        contour = ax1.contourf(Y, X, expected_values, levels=levels, cmap='inferno', alpha=1)
 
-        fig.colorbar(contour, ax=ax1, label='Expected Value', fraction=0.046, pad=0.04,ticks = np.arange(0,levels/2,1))
+        fig.colorbar(contour, ax=ax1, label='Expected Value', fraction=0.046, pad=0.04,
+                     ticks=np.arange(0, levels / 2, 1))
 
-        ax1.set_xlim(-200, 200-grid_size)
-        ax1.set_ylim(-200, 200-grid_size)
+        ax1.set_xlim(-200, 200 - grid_size)
+        ax1.set_ylim(-200, 200 - grid_size)
         ax1.set_xlabel('X')
         ax1.set_ylabel('Y')
         ax1.set_aspect('equal')
-
 
         # Plot the dartboard in the second subplot
         theta = np.linspace(0, 2 * np.pi, 100)
@@ -115,9 +115,23 @@ class graphPlotter:
             y_text = (outer_double_radius + 10) * np.sin(boundary)
             ax1.text(x_text, y_text, str(number), fontsize=12, ha='center', va='center')
 
-        runtime = time.time()-start_time
-        print ("runtime is " + str(round(runtime,2)) + " seconden")
+        runtime = time.time() - start_time
+        print("runtime is " + str(round(runtime, 2)) + " seconden")
 
         plt.tight_layout()
 
         return fig
+
+    def plot_standard_deviation_evolution(self, player, number, section, rolling_average_interval, from_date):
+        data_filtered = self.data.loc[self.data['player'] == player]
+        data_filtered = data_filtered.loc[self.data['aims_at_section'] == str(section)]
+        data_filtered = data_filtered.loc[self.data['aims_at_number'] == str(number)]
+        data_filtered = data_filtered.loc[self.data['date'] > from_date]
+
+        statisticsman = statisticsMan(data_filtered)
+
+        splits = [data_filtered.iloc[i:i+rolling_average_interval] for i in data_filtered.index]
+        for split in splits:
+            cov_split = statisticsman.calculateCovarianceMatrix(player, number, section)
+            std_x,std_y = statisticsman.std_from_cov(cov_split)
+
