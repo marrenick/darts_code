@@ -162,9 +162,9 @@ class FiveOOneGame(tk.Tk):
         print("New difficulty " + str(self.difficulty_level.get()))
 
         self.players = {
-            "Marnick": "graphics/profilepics/Marnick{0}.png".format(str(button)),
-            "Warre": "graphics/profilepics/Warre{0}.png".format(str(button)),
-            "Jelle": "graphics/profilepics/Jelle{0}.png".format(str(button))
+            "Marnick": "graphics/profilepics/Marnick{0}.jpg".format(str(button)),
+            "Warre": "graphics/profilepics/Warre{0}.jpg".format(str(button)),
+            "Jelle": "graphics/profilepics/Jelle{0}.jpg".format(str(button))
         }
         self.update_player_image()
 
