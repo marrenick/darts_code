@@ -32,12 +32,11 @@ class graphPlotter:
     def __init__(self):
 
         datadude = dataRetriever('./connection.ini')
-        self.data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
-
+        data = datadude.database_read_data(schema='darts', table_name='dartsapp_map')
+        self.statisticsman = statisticsMan(data)
 
     def make_heatmap(self, dartboard, grid_size, player, processes):
         # timer
-        self.statisticsman = statisticsMan(self.data)
         start_time = time.time()
 
         double_bull_radius = 7
