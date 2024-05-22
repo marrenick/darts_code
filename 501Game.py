@@ -29,6 +29,16 @@ class FiveOOneGame(tk.Tk):
             "Marnick": "graphics/profilepics/Marnick{0}.png".format(self.difficulty_level.get()),
             "Warre": "graphics/profilepics/Warre{0}.png".format(self.difficulty_level.get()),
             "Jelle": "graphics/profilepics/Jelle{0}.png".format(self.difficulty_level.get()),
+            "Dries": "graphics/profilepics/Dries{0}.png".format(self.difficulty_level.get()),
+            "Margot": "graphics/profilepics/Margot{0}.png".format(self.difficulty_level.get()),
+            "Sione": "graphics/profilepics/Sione{0}.png".format(self.difficulty_level.get()),
+            "Jasper": "graphics/profilepics/Jasper{0}.png".format(self.difficulty_level.get()),
+            "Jacoba": "graphics/profilepics/Jacoba{0}.png".format(self.difficulty_level.get()),
+            "Johan": "graphics/profilepics/Johan{0}.png".format(self.difficulty_level.get()),
+            "Matthias": "graphics/profilepics/Matthias{0}.png".format(self.difficulty_level.get()),
+            "Caroline": "graphics/profilepics/Matthias{0}.png".format(self.difficulty_level.get()),
+            "Patrick": "graphics/profilepics/Matthias{0}.png".format(self.difficulty_level.get()),
+            "Christophe": "graphics/profilepics/Matthias{0}.png".format(self.difficulty_level.get()),
             'dummy25' : "graphics/profilepics/Bot{0}.png".format(self.difficulty_level.get())
         }
 
@@ -162,10 +172,20 @@ class FiveOOneGame(tk.Tk):
         print("New difficulty " + str(self.difficulty_level.get()))
 
         self.players = {
-            "Marnick": "graphics/profilepics/Marnick{0}.jpg".format(str(button)),
-            "Warre": "graphics/profilepics/Warre{0}.jpg".format(str(button)),
-            "Jelle": "graphics/profilepics/Jelle{0}.jpg".format(str(button)),
-            "dummy25": "graphics/profilepics/Bot{0}.jpg".format(str(button))
+            "Marnick": "graphics/profilepics/Marnick{0}.jpg".format(button),
+            "Warre": "graphics/profilepics/Warre{0}.jpg".format(button),
+            "Jelle": "graphics/profilepics/Jelle{0}.jpg".format(button),
+            "Dries": "graphics/profilepics/Dries{0}.jpg".format(button),
+            "Margot": "graphics/profilepics/Margot{0}.jpg".format(button),
+            "Sione": "graphics/profilepics/Sione{0}.jpg".format(button),
+            "Jasper": "graphics/profilepics/Jasper{0}.jpg".format(button),
+            "Jacoba": "graphics/profilepics/Jacoba{0}.jpg".format(button),
+            "Johan": "graphics/profilepics/Johan{0}.jpg".format(button),
+            "Matthias": "graphics/profilepics/Matthias{0}.jpg".format(button),
+            "Caroline": "graphics/profilepics/Matthias{0}.jpg".format(button),
+            "Patrick": "graphics/profilepics/Matthias{0}.jpg".format(button),
+            "Christophe": "graphics/profilepics/Matthias{0}.jpg".format(button),
+            'dummy25' : "graphics/profilepics/Bot{0}.jpg".format(button)
         }
         self.update_player_image()
 
